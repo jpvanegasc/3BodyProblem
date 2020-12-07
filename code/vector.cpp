@@ -85,6 +85,12 @@ Vector3D operator*(double a, Vector3D v1){
     result = v1*a;
     return result;
 }
+
+/* Returns a unit vector with the same direction as v */
+Vector3D unit_vector(Vector3D v){
+    return v/norm(v);
+}
+
 /* @return vector norm squared */
 double norm2(Vector3D v1){
     return v1.v[0]*v1.v[0] + v1.v[1]*v1.v[1] + v1.v[2]*v1.v[2];

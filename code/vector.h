@@ -31,6 +31,7 @@ class Vector3D{
         Vector3D operator/ (double a);
         double operator* (Vector3D v2);
         Vector3D operator^ (Vector3D v2);
+        friend Vector3D unit_vector(Vector3D v);
         friend Vector3D operator* (double a, Vector3D v1);
         friend double norm2(Vector3D v1);
         friend double norm(Vector3D v1);
