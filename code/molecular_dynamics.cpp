@@ -64,3 +64,12 @@ double Collider::energy(Body *molecule){
 
     return E;
 }
+
+double Collider::angular_momentum(Body molecule, double x_axis, double y_axis, double z_axis){
+    Vector3D axis(x_axis, y_axis, z_axis);
+    Vector3D dr = molecule.r - axis;
+
+    double L = molecule.m*vector::norm(dr^molecule.V);
+
+    return L;
+}

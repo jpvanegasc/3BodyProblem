@@ -49,7 +49,7 @@ class Collider{
         void calculate_all_forces(Body *molecule);
         void move_with_pefrl(Body *molecule, double dt);
         double energy(Body *molecule);
-        double angular_momentum(Body *molecule);
+        double angular_momentum(Body molecule, double x_axis=0.0, double y_axis=0.0, double z_axis=0.0);
 };
 
 #endif

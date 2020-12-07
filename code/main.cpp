@@ -28,11 +28,12 @@ int main(int argc, char *argv[]){
         BodySystem[i].initialize(x0[i], y0[i], vx0[i], vy0[i], m0[i], r0[i]);
 
     double dt = (t_max - t_min)/(double) steps;
-    double E0 = Newton.energy(BodySystem);
+    double E0 = Newton.energy(BodySystem), L0 = Newton.angular_momentum(BodySystem[1]);
 
     for(int t=0; t<steps; t++){
         orbit << BodySystem[1].get_x() << '\t' << BodySystem[1].get_y() << '\n';
         energy << t << '\t' << Newton.energy(BodySystem)/E0 << '\n';
+        angular << t << '\t' << Newton.angular_momentum(BodySystem[1])/L0 << '\n';
         Newton.move_with_pefrl(BodySystem, dt);
     }
 
