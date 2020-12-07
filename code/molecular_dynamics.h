@@ -11,7 +11,7 @@
 #define N 2
 
 // Gravity
-const double G = 0.0001185685279944906; // AU3 / (a2 earthMass)
+const double G = 8.88769165499824e-10; //  AU3 / (d2 earthMass)
 
 // PEFRL
 const double Zi = 0.1786178958448091e0;
@@ -27,10 +27,10 @@ class Body{
         Vector3D r, V, F; double m, R;
     public:
         void initialize(double x0, double y0, double Vx0, double Vy0, double m, double R);
-        void add_force(Vector3D dF);
+        void print(void);
+        void add_force(Vector3D dF){F += dF;}
         void move_r(double dt, double coef){r += V*(dt*coef);}
         void move_v(double dt, double coef){V += F*(dt*coef/m);}
-        void print(void);
         void delete_f(void){F.load(0,0,0);}
         double get_x(void){return r.x();} 
         double get_y(void){return r.y();} 
@@ -38,7 +38,7 @@ class Body{
         double get_vx(void){return V.x();} 
         double get_vy(void){return V.y();} 
         double get_fx(void){return F.x();} 
-        double get_fy(void){return F.y();} 
+        double get_fy(void){return F.y();}
 
         friend class Collider;
 };
@@ -48,6 +48,8 @@ class Collider{
         void calculate_force_pair(Body &molecule1, Body &molecule2);
         void calculate_all_forces(Body *molecule);
         void move_with_pefrl(Body *molecule, double dt);
+        double energy(Body *molecule);
+        double angular_momentum(Body *molecule);
 };
 
 #endif
