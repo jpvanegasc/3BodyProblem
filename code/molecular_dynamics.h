@@ -1,5 +1,5 @@
-#ifndef __N_BODY_PROBLEM_MOLECULAR_DYNAMICS_H
-#define __N_BODY_PROBLEM_MOLECULAR_DYNAMICS_H
+#ifndef __3_BODY_PROBLEM_MOLECULAR_DYNAMICS_H
+#define __3_BODY_PROBLEM_MOLECULAR_DYNAMICS_H
 
 #include<iostream>
 #include<cmath>
@@ -8,11 +8,10 @@
 #include"vector.h"
 
 // Geometry constants
-const double square = 50.0;
-const double Lx = square, Ly = square;
+#define N 2
 
-// Diffusion
-const double GAMMA = 0.0;
+// Gravity
+const double G = 0.0001185685279944906; // AU3 / (a2 earthMass)
 
 // PEFRL
 const double Zi = 0.1786178958448091e0;
@@ -22,12 +21,6 @@ const double Xi = 0.06626458266981849*(-1);
 const double coef1 = (1 - 2*Lambda)/2;
 const double coef2 = (1 - 2*(Xi+Zi));
 
-// Implementation
-const int Nx = 10, Ny = 10;
-const int N = Nx*Ny;
-const double R0 = 1.0, m0 = 1.0;
-const double dt = 1.0e-3;
-const double dx = Lx/(Nx+1), dy = Ly/(Ny+1);
 
 class Body{
     private:

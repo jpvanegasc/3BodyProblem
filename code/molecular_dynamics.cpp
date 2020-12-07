@@ -4,38 +4,12 @@ void Body::initialize(double x0, double y0, double Vx0, double Vy0, double m0, d
     r.load(x0,y0,0); V.load(Vx0,Vy0,0); m = m0; R = R0;
 }
 /**
- * Adds the contact force between two molecules, and if molecule is in contact with wall, 
- * calculates and adds it too. Includes diffusion. 
- * Force with wall is calculated using Hertz contact force.
+ * Adds the contact force between two bodies.
  * 
  * @param dF: Force with other molecule. See Collider.calculate_force_pair for details.
  */
 void Body::add_force(Vector3D dF){
-    double x=r.x(), y=r.y();
-    bool far_from_wall = ((R<x) && (x<(Lx-R))) && ((R<y) && (y<(Ly-R)));
-    
-    if(far_from_wall)
-        F += dF;
-    else{
-        double Fx=0, Fy=0;
-        double hx1 = R - x;
-        double hy1 = R - y;
-        
-        if(hx1 > 0) Fx = 1e4*std::pow(hx1, 1.5) - GAMMA*m*V.x()*std::pow(hx1, 0.5);
-        else if(hx1 < 0) {
-            double hx2 = R - Lx + x;
-            if(hx2 > 0) Fx = -1e4*std::pow(hx2, 1.5) - GAMMA*m*V.x()*std::pow(hx2, 0.5);
-        }
-
-        if(hy1 > 0) Fy = 1e4*std::pow(hy1, 1.5) - GAMMA*m*V.x()*std::pow(hy1, 0.5);
-        else if(hy1 < 0) {
-            double hy2 = R - Ly + y;
-            if(hy2 > 0) Fy = -1e4*std::pow(hy2, 1.5) - GAMMA*m*V.x()*std::pow(hy2, 0.5);
-        }
-        
-        Vector3D aux(Fx, Fy, 0);
-        F += dF + aux;
-    }
+    F += dF;
 }
 void Body::print(void){
     std::cout<<" , "<<r.x()<<"+"<<R<<"*cos(t),"<<r.y()<<"+"<<R<<"*sin(t)";
@@ -50,13 +24,8 @@ void Body::print(void){
 void Collider::calculate_force_pair(Body &molecule1, Body &molecule2){
     Vector3D dr, dF;
     dr = molecule2.r - molecule1.r;
-    
-    double s = (molecule1.R + molecule2.R) - norm(dr);
-    if(s>0){
-        double mean_speed = (norm(molecule1.V) + norm(molecule2.V))/2;
-        double F_aux = 1.0e4*std::pow(s, 1.5) - GAMMA*molecule1.m*mean_speed*std::pow(s, 0.5);
-        dF = dr*F_aux;
-    }
+
+    dF = G*molecule1.m*molecule2.m*unit_vector(dr);
 
     molecule2.add_force(dF); molecule1.add_force((-1.0)*dF);
 }
