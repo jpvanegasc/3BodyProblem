@@ -2,10 +2,21 @@
 #define __VECTOR_3D_H
 /**
  * 3D Vector helper class.
- * Author : Jose Daniel Munoz et al.
+ * Author : Juan Pablo Vanegas. Git: jpvanegasc
  */
 #include <iostream>
 #include <cmath>
+
+
+class Vector3D; // First declaration to avoid problems in namespace
+
+Vector3D operator* (double a, Vector3D v1);
+
+namespace vector{
+    Vector3D unit_vector(Vector3D v);
+    double norm2(Vector3D v1);
+    double norm(Vector3D v1);
+}
 
 class Vector3D{
     double v[3];
@@ -31,12 +42,10 @@ class Vector3D{
         Vector3D operator/ (double a);
         double operator* (Vector3D v2);
         Vector3D operator^ (Vector3D v2);
-        friend Vector3D unit_vector(Vector3D v);
         friend Vector3D operator* (double a, Vector3D v1);
-        friend double norm2(Vector3D v1);
-        friend double norm(Vector3D v1);
+        friend Vector3D vector::unit_vector(Vector3D v);
+        friend double vector::norm2(Vector3D v1);
+        friend double vector::norm(Vector3D v1);
 };
-
-
 
 #endif

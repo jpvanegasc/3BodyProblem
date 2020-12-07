@@ -80,22 +80,24 @@ Vector3D Vector3D::operator^(Vector3D v2){
     return result;
 }
 
+
 Vector3D operator*(double a, Vector3D v1){
     Vector3D result;
     result = v1*a;
     return result;
 }
 
-/* Returns a unit vector with the same direction as v */
-Vector3D unit_vector(Vector3D v){
-    return v/norm(v);
-}
-
-/* @return vector norm squared */
-double norm2(Vector3D v1){
-    return v1.v[0]*v1.v[0] + v1.v[1]*v1.v[1] + v1.v[2]*v1.v[2];
-}
-/* @return vector norm */
-double norm(Vector3D v1){
-    return std::sqrt(norm2(v1));
+namespace vector{
+    /* Returns a unit vector with the same direction as v */
+    Vector3D unit_vector(Vector3D v){
+        return v/vector::norm(v);
+    }
+    /* @return vector norm squared */
+    double norm2(Vector3D v1){
+        return v1.v[0]*v1.v[0] + v1.v[1]*v1.v[1] + v1.v[2]*v1.v[2];
+    }
+    /* @return vector norm */
+    double norm(Vector3D v1){
+        return std::sqrt(vector::norm2(v1));
+    }
 }
