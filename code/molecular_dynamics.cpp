@@ -18,7 +18,7 @@ void Collider::calculate_force_pair(Body &molecule1, Body &molecule2){
     Vector3D dr, dF;
     dr = molecule2.r - molecule1.r;
 
-    dF = -G*molecule1.m*molecule2.m*vector::unit_vector(dr)/vector::norm2(dr);
+    dF = -G*molecule1.m*molecule2.m*vec3d::unit_vector(dr)/vec3d::norm2(dr);
 
     molecule2.add_force(dF); molecule1.add_force((-1.0)*dF);
 }
@@ -55,12 +55,12 @@ double Collider::energy(Body *molecule){
     for(int i=0; i<N; i++)
         for(int j=i+1; j<N; j++){
             Vector3D dr = molecule[i].r - molecule[j].r;
-            E += -G*molecule[j].m/vector::norm(dr);
+            E += -G*molecule[j].m/vec3d::norm(dr);
         }
 
     // Kinetic
     for(int i=0; i<N; i++)
-        E += 0.5*molecule[i].m*vector::norm2(molecule[i].V);
+        E += 0.5*molecule[i].m*vec3d::norm2(molecule[i].V);
 
     return E;
 }
@@ -69,7 +69,7 @@ double Collider::angular_momentum(Body molecule, double x_axis, double y_axis, d
     Vector3D axis(x_axis, y_axis, z_axis);
     Vector3D dr = molecule.r - axis;
 
-    double L = molecule.m*vector::norm(dr^molecule.V);
+    double L = molecule.m*vec3d::norm(dr^molecule.V);
 
     return L;
 }

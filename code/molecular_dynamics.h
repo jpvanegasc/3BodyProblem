@@ -5,7 +5,7 @@
 #include<cmath>
 #include<fstream>
 
-#include"vector.h"
+#include"vector3D.h"
 
 // Geometry constants
 #define N 2
