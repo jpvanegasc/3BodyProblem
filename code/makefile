@@ -5,7 +5,7 @@ CACH = --tool=cachegrind
 C_STD = -std=c++11
 
 # Dependecies
-DEPS = molecular_dynamics.cpp vector.cpp
+DEPS = molecular_dynamics.cpp vector3D.cpp
 
 all : main.o 
 
