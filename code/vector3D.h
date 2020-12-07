@@ -22,7 +22,7 @@ class Vector3D{
     double v[3];
     public:
         Vector3D(double =0.0, double =0.0, double =0.0);
-        void load(double x0, double y0, double z0);
+        void load(double x0, double y0, double z0){v[0] = x0; v[1] = y0; v[2] = z0;}
         void show(void);
         /* @return x component*/
         double x(void){return v[0];};
