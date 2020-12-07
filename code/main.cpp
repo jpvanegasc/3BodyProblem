@@ -2,33 +2,39 @@
  * Main module. 
  * This program is for calculating and saving data. For animations please use animate.cpp
  */
+#include<fstream>
+
 #include"molecular_dynamics.h"
-#include"random64.h"
+
+
 
 int main(int argc, char *argv[]){
-    Body Molecule[N];
+    // Initial conditions
+    double m0[N] = {333030.0, 1.0}; // earth mass
+    double r0[N] = {109.0, 1.0}; // earth radius
+    double x0[N] = {0.0, 1.0}, y0[N] = {0.0, 0.0}; // AU
+    double vx0[N] = {0.0, 0.0}, vy0[N] = {0.0, 2*M_PI}; // AU/year
+
+    double t_min = 0, t_max = 1e10; // years
+    int steps = 1000;
+
+    // Implementation
+    Body BodySystem[N];
     Collider Newton;
-    CRandom ran64(1);
-    double t;
 
-    double k_T=100;
-    double x0, y0, theta, Vx0, Vy0;
-    double V0=sqrt(2.0*k_T/m0);
-        
-    for(int i=0; i<Nx; i++)
-        for(int j=0; j<Ny; j++){
-            x0=(i+1)*dx; y0=(j+1)*dy; 
-            theta = 2.0*M_PI*ran64.r(); 
-            Vx0 = V0*std::cos(theta); Vy0 = V0*std::sin(theta);
-            Molecule[i*Ny+j].initialize(x0, y0, Vx0, Vy0, m0, R0);
-            //Molecule[i*Ny+j].initialize(R0+0.0000000001, R0+0.1, (-1.0)*V0, 0, m0, R0);
-        }
+    std::ofstream file("earth.txt");
 
-    double T_sim=30.0,T_eq=00.0;
-        
-    for(t=0.0; t<T_eq+T_sim; t+=dt){
-        Newton.move_with_pefrl(Molecule, dt);
+    for(int i=0; i<N; i++)
+        BodySystem[i].initialize(x0[i], y0[i], vx0[i], vy0[i], m0[i], r0[i]);
+
+    double dt = (t_max - t_min)/(double) steps;
+
+    for(int t=0; t<steps; t++){
+        file << BodySystem[1].get_x() << '\t' << BodySystem[1].get_y() << '\n';
+        Newton.move_with_pefrl(BodySystem, dt);
     }
-    
+
+    file.close();
+
     return 0;
 }
