@@ -14,13 +14,15 @@ int main(int argc, char *argv[]){
     int N, c; double **initial_conditions = NULL;
     double TMAX = 1e3; //days
 
-    load_file("earth_sun.csv", initial_conditions, N, c);
+    fh::load_file("earth_sun.csv", initial_conditions, N, c);
     calculate_orbits(initial_conditions, N, TMAX, "earth_sun");
+    fh::clear(initial_conditions, N);
 
-    load_file("earth_moon_sun.csv", initial_conditions, N, c);
+    fh::load_file("earth_moon_sun.csv", initial_conditions, N, c);
     calculate_orbits(initial_conditions, N, TMAX, "earth_moon_sun");
+    fh::clear(initial_conditions, N);
 
-    load_file("kozai.csv", initial_conditions, N, c); // This starts with the moon at 90 degrees
+    fh::load_file("kozai.csv", initial_conditions, N, c); // This starts with the moon at 90 degrees
     double moon_earth = initial_conditions[2][1];
 
     for(int i=90; i>=0; i--){
@@ -33,8 +35,7 @@ int main(int argc, char *argv[]){
         calculate_orbits(initial_conditions, N, TMAX, name);
     }
 
-    for(int i=0; i<N; i++) delete[] initial_conditions[i];
-    delete[] initial_conditions;
+    fh::clear(initial_conditions,  N, false);
 
     return 0;
 }

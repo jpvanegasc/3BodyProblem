@@ -1,9 +1,9 @@
 /**
- * File Handler main module
+ * File Handler main module. @jpvanegasc/FileHandler
  * 
  * @author: Juan Vanegas. git: jpvanegasc
  * 
- * You can find this code at github.com/jpvanegasc/FileHandler
+ * Last modification: Dec 8, 2020.
  */
 #ifndef __FILE_HANDLER_H
 #define __FILE_HANDLER_H
@@ -25,10 +25,13 @@ struct FileNotOpened: public std::exception{
     }
 };
 
-std::string get_full_file(std::ifstream f);
+namespace fh{
+    void vec_load_file(std::string filename, vector2D(double) &data, char delim=',', char comment='#');
+    void load_file(std::string filename, double **&data, int &rows, int &columns, char delim=',', char comment='#');
 
-void __check_vec(vector2D(double) &data);
-void vec_load_file(std::string filename, vector2D(double) &data, char delim=',', char comment='#');
-void load_file(std::string filename, double **&data, int &rows, int &columns, char delim=',', char comment='#');
+    void clear(double **&data, int rows, bool set_null=true);
+    void __check_vec(vector2D(double) &data);
+    std::string get_full_file(std::ifstream f);
+}
 
 #endif
