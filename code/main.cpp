@@ -10,22 +10,24 @@
 
 int main(int argc, char *argv[]){
     // Initial conditions
-    double m0[N] = {333030.0, 1.0}; // earth mass
-    double r0[N] = {109.0, 1.0}; // earth radius
-    double x0[N] = {0.0, 1.0}, y0[N] = {0.0, 0.0}; // AU
-    double vx0[N] = {0.0, 0.0}, vy0[N] = {0.0, 2*M_PI/365.25}; // AU/day
+    int N, c; double **initial = NULL;
+    load_file("earth_sun.csv", initial, N, c);
 
     double t_min = 0, t_max = 1e3; // days
     int steps = 1000;
 
     // Implementation
-    Body BodySystem[N];
-    Collider Newton;
+    Body *BodySystem = new Body[N];
+    Collider Newton(N);
+
+    for(int i=0; i<N; i++) BodySystem[i] = Body(N);
 
     std::ofstream orbit("earth.txt"), energy("energy.txt"), angular("angular.txt");
 
     for(int i=0; i<N; i++)
-        BodySystem[i].initialize(x0[i], y0[i], vx0[i], vy0[i], m0[i], r0[i]);
+        BodySystem[i].initialize(
+            initial[i][0], initial[i][1], initial[i][3], initial[i][4], initial[i][6], initial[i][7]
+        );
 
     double dt = (t_max - t_min)/(double) steps;
     double E0 = Newton.energy(BodySystem), L0 = Newton.angular_momentum(BodySystem[1]);
@@ -38,6 +40,9 @@ int main(int argc, char *argv[]){
     }
 
     orbit.close(); energy.close(); angular.close();
+
+    for(int i=0; i<N; i++) delete[] initial[i];
+    delete[] initial;
 
     return 0;
 }
