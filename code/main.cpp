@@ -1,11 +1,6 @@
-/**
- * Main module. 
- * This program is for calculating and saving data. For animations please use animate.cpp
- */
 #include<fstream>
 
 #include"molecular_dynamics.h"
-
 
 
 int main(int argc, char *argv[]){
@@ -36,6 +31,7 @@ int main(int argc, char *argv[]){
         orbit << Bodies[1].get_x() << ',' << Bodies[1].get_y() << ',' << Bodies[i].get_z() << '\n';
         energy << t << ',' << Newton.energy(Bodies)/E0 << '\n';
         angular << t << ',' << Newton.angular_momentum(Bodies[1])/L0 << '\n';
+
         Newton.move_with_pefrl(Bodies, dt);
     }
 
