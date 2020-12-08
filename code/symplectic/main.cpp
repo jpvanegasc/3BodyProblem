@@ -5,10 +5,13 @@
 
 #include"molecular_dynamics.h"
 
+
 #define str_(text) std::string text
 #define print(text) std::cout << text <<std::endl
 
 void calculate_orbits(double **initial, int N, double t_max, str_(name), double t_min=0.0, int steps=1000);
+
+int selected = 1; // Angular momentum calculated by default is earth's (0 is sun, 2 is moon)
 
 int main(int argc, char *argv[]){
     int N, c; double **initial_conditions = NULL;
@@ -50,7 +53,7 @@ void calculate_orbits(double **initial, int N, double t_max, str_(name), double 
         energy("energy_"+name+".txt"), 
         angular("angular_"+name+".txt");
 
-    orbit << "#x,y,z (for each  body)\n";
+    orbit << "#x_earth,y_earth,z_earth,x_sun,y_sun,z_sun(,x_moon,y_moon,z_moon) (if the moon is there)\n";
     energy << "#t,E/E0\n";
     angular << "#t,L/L0\n";
 
@@ -62,7 +65,7 @@ void calculate_orbits(double **initial, int N, double t_max, str_(name), double 
         );
 
     double dt = (t_max - t_min)/(double) steps;
-    double E0 = Newton.energy(Bodies), L0 = Newton.angular_momentum(Bodies[1]);
+    double E0 = Newton.energy(Bodies), L0 = Newton.angular_momentum(Bodies[selected]);
 
     for(int t=0; t<steps; t++){
 
@@ -71,7 +74,7 @@ void calculate_orbits(double **initial, int N, double t_max, str_(name), double 
         orbit << '\n';
 
         energy << t << ',' << Newton.energy(Bodies)/E0 << '\n';
-        angular << t << ',' << Newton.angular_momentum(Bodies[1])/L0 << '\n';
+        angular << t << ',' << Newton.angular_momentum(Bodies[selected])/L0 << '\n';
 
         Newton.move_with_pefrl(Bodies, dt);
     }
