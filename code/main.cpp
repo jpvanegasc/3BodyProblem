@@ -15,6 +15,11 @@ int main(int argc, char *argv[]){
     load_file("earth_sun.csv", initial_conditions, N, c);
     calculate_orbits(initial_conditions, N, TMAX, "earth_sun");
 
+    load_file("earth_moon_sun.csv", initial_conditions, N, c);
+    calculate_orbits(initial_conditions, N, TMAX, "earth_moon_sun");
+
+    load_file("kozai.csv", initial_conditions, N, c);
+    calculate_orbits(initial_conditions, N, TMAX, "kozai");
 
     for(int i=0; i<N; i++) delete[] initial_conditions[i];
     delete[] initial_conditions;
@@ -60,6 +65,6 @@ void calculate_orbits(double **initial, int N, double t_max, str(name), double t
 
     orbit.close(); energy.close(); angular.close();
 
-    print("All done for" + name);
+    print("All done for " + name);
 
 }
