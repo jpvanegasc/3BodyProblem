@@ -10,39 +10,39 @@
 
 int main(int argc, char *argv[]){
     // Initial conditions
-    int N, c; double **initial = NULL;
-    load_file("earth_sun.csv", initial, N, c);
+    int N, c; double **ini = NULL;
+    load_file("earth_sun.csv", ini, N, c);
 
     double t_min = 0, t_max = 1e3; // days
     int steps = 1000;
 
     // Implementation
-    Body *BodySystem = new Body[N];
+    Body *Bodies = new Body[N];
     Collider Newton(N);
 
-    for(int i=0; i<N; i++) BodySystem[i] = Body(N);
+    for(int i=0; i<N; i++) Bodies[i] = Body(N);
 
     std::ofstream orbit("earth.txt"), energy("energy.txt"), angular("angular.txt");
 
     for(int i=0; i<N; i++)
-        BodySystem[i].initialize(
-            initial[i][0], initial[i][1], initial[i][3], initial[i][4], initial[i][6], initial[i][7]
+        Bodies[i].initialize(
+            ini[i][0], ini[i][1], ini[i][2], ini[i][3], ini[i][4], ini[i][5], ini[i][6], ini[i][7]
         );
 
     double dt = (t_max - t_min)/(double) steps;
-    double E0 = Newton.energy(BodySystem), L0 = Newton.angular_momentum(BodySystem[1]);
+    double E0 = Newton.energy(Bodies), L0 = Newton.angular_momentum(Bodies[1]);
 
     for(int t=0; t<steps; t++){
-        orbit << BodySystem[1].get_x() << '\t' << BodySystem[1].get_y() << '\n';
-        energy << t << '\t' << Newton.energy(BodySystem)/E0 << '\n';
-        angular << t << '\t' << Newton.angular_momentum(BodySystem[1])/L0 << '\n';
-        Newton.move_with_pefrl(BodySystem, dt);
+        orbit << Bodies[1].get_x() << ',' << Bodies[1].get_y() << ',' << Bodies[i].get_z() << '\n';
+        energy << t << ',' << Newton.energy(Bodies)/E0 << '\n';
+        angular << t << ',' << Newton.angular_momentum(Bodies[1])/L0 << '\n';
+        Newton.move_with_pefrl(Bodies, dt);
     }
 
     orbit.close(); energy.close(); angular.close();
 
-    for(int i=0; i<N; i++) delete[] initial[i];
-    delete[] initial;
+    for(int i=0; i<N; i++) delete[] ini[i];
+    delete[] ini;
 
     return 0;
 }

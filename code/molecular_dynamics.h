@@ -25,7 +25,7 @@ class Body{
         int N; Vector3D r, V, F; double m, R;
     public:
         Body(int =0);
-        void initialize(double x0, double y0, double Vx0, double Vy0, double m, double R);
+        void initialize(double x0, double y0, double z0, double Vx0, double Vy0, double Vz0, double m, double R);
         void print(void);
         void add_force(Vector3D dF){F += dF;}
         void move_r(double dt, double coef){r += V*(dt*coef);}
