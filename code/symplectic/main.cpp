@@ -1,12 +1,14 @@
+#include<iostream>
+#include<cmath>
 #include<fstream>
 #include<string>
 
 #include"molecular_dynamics.h"
 
-#define str(text) std::string text
+#define str_(text) std::string text
 #define print(text) std::cout << text <<std::endl
 
-void calculate_orbits(double **initial, int N, double t_max, str(name), double t_min=0.0, int steps=1000);
+void calculate_orbits(double **initial, int N, double t_max, str_(name), double t_min=0.0, int steps=1000);
 
 int main(int argc, char *argv[]){
     int N, c; double **initial_conditions = NULL;
@@ -18,8 +20,18 @@ int main(int argc, char *argv[]){
     load_file("earth_moon_sun.csv", initial_conditions, N, c);
     calculate_orbits(initial_conditions, N, TMAX, "earth_moon_sun");
 
-    load_file("kozai.csv", initial_conditions, N, c);
-    calculate_orbits(initial_conditions, N, TMAX, "kozai");
+    load_file("kozai.csv", initial_conditions, N, c); // This starts with the moon at 90 degrees
+    double moon_earth = initial_conditions[2][1];
+
+    for(int i=90; i>=0; i--){
+        double theta = i*M_PI/180.0; // Angle from x-axis
+        initial_conditions[2][0] = 1.0 + moon_earth*std::cos(theta);
+        initial_conditions[2][1] = moon_earth*std::sin(theta);
+
+        std::stringstream i_s; i_s << i;
+        str_(name) = "kozai_" + i_s.str();
+        calculate_orbits(initial_conditions, N, TMAX, name);
+    }
 
     for(int i=0; i<N; i++) delete[] initial_conditions[i];
     delete[] initial_conditions;
@@ -27,7 +39,7 @@ int main(int argc, char *argv[]){
     return 0;
 }
 
-void calculate_orbits(double **initial, int N, double t_max, str(name), double t_min, int steps){
+void calculate_orbits(double **initial, int N, double t_max, str_(name), double t_min, int steps){
     Body *Bodies = new Body[N];
     Collider Newton(N);
 
@@ -35,7 +47,7 @@ void calculate_orbits(double **initial, int N, double t_max, str(name), double t
 
     std::ofstream orbit("orbits_"+name+".txt"), 
         energy("energy_"+name+".txt"), 
-        angular("angular"+name+".txt");
+        angular("angular_"+name+".txt");
 
     orbit << "#x,y,z (for each  body)\n";
     energy << "#t,E/E0\n";
@@ -64,6 +76,8 @@ void calculate_orbits(double **initial, int N, double t_max, str(name), double t
     }
 
     orbit.close(); energy.close(); angular.close();
+
+    delete[] Bodies;
 
     print("All done for " + name);
 
