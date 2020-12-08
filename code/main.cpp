@@ -1,34 +1,57 @@
 #include<fstream>
+#include<string>
 
 #include"molecular_dynamics.h"
 
+#define str(text) std::string text
+#define print(text) std::cout << text <<std::endl
+
+void calculate_orbits(double **initial, int N, double t_max, str(name), double t_min=0.0, int steps=1000);
 
 int main(int argc, char *argv[]){
-    // Initial conditions
-    int N, c; double **ini = NULL;
-    load_file("earth_sun.csv", ini, N, c);
+    int N, c; double **initial_conditions = NULL;
+    double TMAX = 1e3; //days
 
-    double t_min = 0, t_max = 1e3; // days
-    int steps = 1000;
+    load_file("earth_sun.csv", initial_conditions, N, c);
+    calculate_orbits(initial_conditions, N, TMAX, "earth_sun");
 
-    // Implementation
+
+    for(int i=0; i<N; i++) delete[] initial_conditions[i];
+    delete[] initial_conditions;
+
+    return 0;
+}
+
+void calculate_orbits(double **initial, int N, double t_max, str(name), double t_min, int steps){
     Body *Bodies = new Body[N];
     Collider Newton(N);
 
     for(int i=0; i<N; i++) Bodies[i] = Body(N);
 
-    std::ofstream orbit("earth.txt"), energy("energy.txt"), angular("angular.txt");
+    std::ofstream orbit("orbits_"+name+".txt"), 
+        energy("energy_"+name+".txt"), 
+        angular("angular"+name+".txt");
+
+    orbit << "#x,y,z (for each  body)\n";
+    energy << "#t,E/E0\n";
+    angular << "#t,L/L0\n";
 
     for(int i=0; i<N; i++)
         Bodies[i].initialize(
-            ini[i][0], ini[i][1], ini[i][2], ini[i][3], ini[i][4], ini[i][5], ini[i][6], ini[i][7]
+            initial[i][0], initial[i][1], initial[i][2],
+            initial[i][3], initial[i][4], initial[i][5], 
+            initial[i][6], initial[i][7]
         );
 
     double dt = (t_max - t_min)/(double) steps;
     double E0 = Newton.energy(Bodies), L0 = Newton.angular_momentum(Bodies[1]);
 
     for(int t=0; t<steps; t++){
-        orbit << Bodies[1].get_x() << ',' << Bodies[1].get_y() << ',' << Bodies[i].get_z() << '\n';
+
+        for(int i=0; i<N; i++)
+            orbit << Bodies[i].get_x() << ',' << Bodies[i].get_y() << ',' << Bodies[i].get_z() << ',';
+        orbit << '\n';
+
         energy << t << ',' << Newton.energy(Bodies)/E0 << '\n';
         angular << t << ',' << Newton.angular_momentum(Bodies[1])/L0 << '\n';
 
@@ -37,8 +60,6 @@ int main(int argc, char *argv[]){
 
     orbit.close(); energy.close(); angular.close();
 
-    for(int i=0; i<N; i++) delete[] ini[i];
-    delete[] ini;
+    print("All done for" + name);
 
-    return 0;
 }
