@@ -6,9 +6,7 @@
 #include<fstream>
 
 #include"vector3D.h"
-
-// Geometry constants
-#define N 2
+#include"file_handler.h"
 
 // Gravity
 const double G = 8.88769165499824e-10; //  AU3 / (d2 earthMass)
@@ -24,8 +22,9 @@ const double coef2 = (1 - 2*(Xi+Zi));
 
 class Body{
     private:
-        Vector3D r, V, F; double m, R;
+        int N; Vector3D r, V, F; double m, R;
     public:
+        Body(int =0);
         void initialize(double x0, double y0, double Vx0, double Vy0, double m, double R);
         void print(void);
         void add_force(Vector3D dF){F += dF;}
@@ -44,7 +43,10 @@ class Body{
 };
 
 class Collider{
+    private:
+        int N;
     public:
+        Collider(int =0);
         void calculate_force_pair(Body &molecule1, Body &molecule2);
         void calculate_all_forces(Body *molecule);
         void move_with_pefrl(Body *molecule, double dt);

@@ -1,11 +1,19 @@
 #include "molecular_dynamics.h"
 
+Body::Body(int n){
+    N = n;
+}
+
 void Body::initialize(double x0, double y0, double Vx0, double Vy0, double m0, double R0){
     r.load(x0,y0,0); V.load(Vx0,Vy0,0); m = m0; R = R0;
 }
 
 void Body::print(void){
     std::cout<<" , "<<r.x()<<"+"<<R<<"*cos(t),"<<r.y()<<"+"<<R<<"*sin(t)";
+}
+
+Collider::Collider(int n){
+    N = n;
 }
 
 /**
