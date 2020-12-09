@@ -13,3 +13,10 @@
 *.jpg
 *.json
 *.txt
+
+# Python
+__pycache__
+.ipynb_checkpoints
+
+# vscode
+.vscode
