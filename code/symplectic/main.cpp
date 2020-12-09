@@ -94,9 +94,9 @@ void calculate_orbits(double **initial, int N, double t_max, str_(name), int ste
 
     for(int t=0; t<steps; t++){
 
-        for(int i=0; i<N; i++)
+        for(int i=0; i<N-1; i++)
             orbit << Bodies[i].get_x() << ',' << Bodies[i].get_y() << ',' << Bodies[i].get_z() << ',';
-        orbit << '\n';
+        orbit << Bodies[N-1].get_x() << ',' << Bodies[N-1].get_y() << ',' << Bodies[N-1].get_z() << '\n';
 
         energy << t << ',' << Newton.energy(Bodies)/E0 << '\n';
         angular << t << ',' << Newton.angular_momentum(Bodies[selected])/L0 << '\n';
