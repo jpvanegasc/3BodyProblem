@@ -9,22 +9,47 @@
 #define str_(text) std::string text
 #define print(text) std::cout << text <<std::endl
 
-void calculate_orbits(double **initial, int N, double t_max, str_(name), double t_min=0.0, int steps=1000);
+void calculate_orbits(double **initial, int N, double t_max, str_(name), int steps=1000, double t_min=0.0);
 
 int selected = 1; // Angular momentum calculated by default is earth's (0 is sun, 2 is moon)
 
 int main(int argc, char *argv[]){
     int N, c; double **initial_conditions = NULL;
-    double TMAX = 1e3; //days
+    double TMAX = 1e4; //days
 
+    // First point
     fh::load_file("earth_sun.csv", initial_conditions, N, c);
-    calculate_orbits(initial_conditions, N, TMAX, "earth_sun");
+    calculate_orbits(initial_conditions, N, TMAX, "earth_sun_N1000");
+
+    calculate_orbits(initial_conditions, N, TMAX, "earth_sun_N100", 100);
+    calculate_orbits(initial_conditions, N, TMAX, "earth_sun_N5000", 5000);
+    calculate_orbits(initial_conditions, N, TMAX, "earth_sun_N10000", 10000);
+
+    double ecc = 0.0167;
+    initial_conditions[0][0] = 1.0167*ecc;
+    initial_conditions[1][0] = 1.0167;
+    calculate_orbits(initial_conditions, N, TMAX, "earth_sun_e0dot0167");
+
+    ecc = 0.1; 
+    initial_conditions[0][0] = ecc; initial_conditions[1][0] = 1.0;
+    calculate_orbits(initial_conditions, N, TMAX, "earth_sun_e0dot1");
+
+    ecc = 0.2; 
+    initial_conditions[0][0] = ecc;
+    calculate_orbits(initial_conditions, N, TMAX, "earth_sun_e0dot2");
+
+    ecc = 0.5; 
+    initial_conditions[0][0] = ecc;
+    calculate_orbits(initial_conditions, N, TMAX, "earth_sun_e0dot2");
+
     fh::clear(initial_conditions, N);
 
+    // Second point
     fh::load_file("earth_moon_sun.csv", initial_conditions, N, c);
-    calculate_orbits(initial_conditions, N, TMAX, "earth_moon_sun");
+    calculate_orbits(initial_conditions, N, TMAX, "moon_earth_sun");
     fh::clear(initial_conditions, N);
 
+    // Third point
     fh::load_file("kozai.csv", initial_conditions, N, c); // This starts with the moon at 90 degrees
     double moon_earth = initial_conditions[2][1];
 
@@ -43,17 +68,17 @@ int main(int argc, char *argv[]){
     return 0;
 }
 
-void calculate_orbits(double **initial, int N, double t_max, str_(name), double t_min, int steps){
+void calculate_orbits(double **initial, int N, double t_max, str_(name), int steps, double t_min){
     Body *Bodies = new Body[N];
     Collider Newton(N);
 
     for(int i=0; i<N; i++) Bodies[i] = Body(N);
 
-    std::ofstream orbit("orbits_"+name+".txt"), 
-        energy("energy_"+name+".txt"), 
-        angular("angular_"+name+".txt");
+    std::ofstream orbit(name+"_orbits.txt"), 
+        energy(name+"_energy.txt"), 
+        angular(name+"_angular.txt");
 
-    orbit << "#x_earth,y_earth,z_earth,x_sun,y_sun,z_sun(,x_moon,y_moon,z_moon) (if the moon is there)\n";
+    orbit << "#x_sun,y_sun,z_sun,x_earth,y_earth,z_earth(,x_moon,y_moon,z_moon) (if the moon is there)\n";
     energy << "#t,E/E0\n";
     angular << "#t,L/L0\n";
 
