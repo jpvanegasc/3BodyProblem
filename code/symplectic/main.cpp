@@ -40,7 +40,7 @@ int main(int argc, char *argv[]){
 
     ecc = 0.5; 
     initial_conditions[0][0] = ecc;
-    calculate_orbits(initial_conditions, N, TMAX, "earth_sun_e0dot2");
+    calculate_orbits(initial_conditions, N, TMAX, "earth_sun_e0dot5");
 
     fh::clear(initial_conditions, N);
 
