@@ -12,6 +12,10 @@ all : main.o
 main.o : main.cpp $(DEPS) *.h
 	g++ $(C_STD) -O2 $< $(DEPS) -o $@
 	time ./$@
+	mkdir first; mkdir second; mkdir third
+	mv earth*.txt first
+	mv moon*.txt second
+	mv kozai*.txt third
 
 .PHONY : animation
 animation : animate.cpp *.h $(DEPS) animation.hpp
