@@ -16,6 +16,7 @@ main.o : main.cpp $(DEPS) *.h
 	mv earth*.txt first
 	mv moon*.txt second
 	mv kozai*.txt third
+	bash organize.sh
 
 .PHONY : animation
 animation : animate.cpp *.h $(DEPS) animation.hpp
